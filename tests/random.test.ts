@@ -93,46 +93,106 @@ Deno.test("random 05", () => {
 });
 
 Deno.test("random 06", () => {
-  assertThrows(() => {
-    random({ seed: 0.1 });
-  }, RangeError, undefined, "seed = 0.1");
-  assertThrows(() => {
-    random({ min: 0.1 });
-  }, RangeError, undefined, "min = 0.1");
-  assertThrows(() => {
-    random({ max: 0.1 });
-  }, RangeError, undefined, "max = 0.1");
-  assertThrows(() => {
-    random({ streamSize: 0.1 });
-  }, RangeError, undefined, "streamSize = 0.1");
+  assertThrows(
+    () => {
+      random({ seed: 0.1 });
+    },
+    RangeError,
+    undefined,
+    "seed = 0.1",
+  );
+  assertThrows(
+    () => {
+      random({ min: 0.1 });
+    },
+    RangeError,
+    undefined,
+    "min = 0.1",
+  );
+  assertThrows(
+    () => {
+      random({ max: 0.1 });
+    },
+    RangeError,
+    undefined,
+    "max = 0.1",
+  );
+  assertThrows(
+    () => {
+      random({ streamSize: 0.1 });
+    },
+    RangeError,
+    undefined,
+    "streamSize = 0.1",
+  );
 
-  assertThrows(() => {
-    random({ min: 0x100000000 });
-  }, RangeError, undefined, "min = 0x100000000");
-  assertThrows(() => {
-    random({ max: 0x100000000 });
-  }, RangeError, undefined, "max = 0x100000000");
+  assertThrows(
+    () => {
+      random({ min: 0x100000000 });
+    },
+    RangeError,
+    undefined,
+    "min = 0x100000000",
+  );
+  assertThrows(
+    () => {
+      random({ max: 0x100000000 });
+    },
+    RangeError,
+    undefined,
+    "max = 0x100000000",
+  );
 
-  assertThrows(() => {
-    random({ min: -0x100000000 });
-  }, RangeError, undefined, "min = -0x100000000");
-  assertThrows(() => {
-    random({ max: -0x100000000 });
-  }, RangeError, undefined, "max = -0x100000000");
+  assertThrows(
+    () => {
+      random({ min: -0x100000000 });
+    },
+    RangeError,
+    undefined,
+    "min = -0x100000000",
+  );
+  assertThrows(
+    () => {
+      random({ max: -0x100000000 });
+    },
+    RangeError,
+    undefined,
+    "max = -0x100000000",
+  );
 
-  assertThrows(() => {
-    const _r = random({ max: -1 });
-  }, RangeError, undefined, "max = -1");
-  assertThrows(() => {
-    const _r = random({ min: 0, max: -1 });
-  }, RangeError, undefined, "min = 0, max = -1");
+  assertThrows(
+    () => {
+      const _r = random({ max: -1 });
+    },
+    RangeError,
+    undefined,
+    "max = -1",
+  );
+  assertThrows(
+    () => {
+      const _r = random({ min: 0, max: -1 });
+    },
+    RangeError,
+    undefined,
+    "min = 0, max = -1",
+  );
 
-  assertThrows(() => {
-    const _r = random({ min: -1, max: 0xffffffff });
-  }, RangeError, undefined, "min = -1 max = 0xffffffff");
-  assertThrows(() => {
-    const _r = random({ min: -1, max: 0xffffffff });
-  }, RangeError, undefined, "min = -0xffffffff max = 1");
+  assertThrows(
+    () => {
+      const _r = random({ min: -1, max: 0xffffffff });
+    },
+    RangeError,
+    undefined,
+    "min = -1 max = 0xffffffff",
+  );
+  assertThrows(
+    () => {
+      const _r = random({ min: -1, max: 0xffffffff });
+    },
+    RangeError,
+    undefined,
+    "min = -0xffffffff max = 1",
+  );
 });
 
 Deno.test("random 07", () => {

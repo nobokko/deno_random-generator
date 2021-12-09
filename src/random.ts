@@ -42,20 +42,19 @@ function range(streamSize?: number) {
   }
 
   if (typeof streamSize == "number") {
-    return (function * () {
+    return (function* () {
       for (let i = 0; i < streamSize; i++) {
         yield 0;
       }
     })();
   } else {
-    return (function * () {
+    return (function* () {
       while (true) {
         yield 0;
       }
     })();
   }
 }
-
 
 export function random(
   { seed = 123456789, min, max, streamSize }: {
