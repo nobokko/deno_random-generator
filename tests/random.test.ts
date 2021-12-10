@@ -21,9 +21,26 @@ Deno.test("random 01", () => {
   // console.log([min.toString(16), max.toString(16)]);
 });
 
-Deno.test("random 02", () => {
+Deno.test("random 02 - 1", () => {
   const size = 10000;
   const testmin = -10000;
+  const r = random({ streamSize: size, min: testmin });
+  let min = Number.MAX_SAFE_INTEGER;
+  let max = Number.MIN_SAFE_INTEGER;
+  let count = 0;
+  for (const num of r) {
+    count++;
+    assert(testmin <= num, `num is ${num}`);
+    min = Math.min(min, num);
+    max = Math.max(max, num);
+  }
+  assertEquals(count, size);
+  // console.log([min.toString(16), max.toString(16)]);
+});
+
+Deno.test("random 02 - 2", () => {
+  const size = 10000;
+  const testmin = 0x80000000;
   const r = random({ streamSize: size, min: testmin });
   let min = Number.MAX_SAFE_INTEGER;
   let max = Number.MIN_SAFE_INTEGER;
@@ -193,6 +210,32 @@ Deno.test("random 06", () => {
     undefined,
     "min = -0xffffffff max = 1",
   );
+
+  assertThrows(
+    () => {
+      random({ streamSize: -1 });
+    },
+    RangeError,
+    undefined,
+    "streamSize = 1",
+  );
+
+  assertThrows(
+    () => {
+      const r = random({
+        scalingFunction: (num: number): number => {
+          if (num % 2) return num;
+          else throw new RangeError();
+        },
+      });
+      for (const num of r) {
+        num + 1;
+      }
+    },
+    RangeError,
+    undefined,
+    "scalingFunction",
+  );
 });
 
 Deno.test("random 07", () => {
@@ -206,6 +249,26 @@ Deno.test("random 07", () => {
     if (count === size) {
       break;
     }
+  }
+  assertEquals(count, size);
+  // console.log([min.toString(16), max.toString(16)]);
+});
+
+Deno.test("random 08", () => {
+  const size = 10000;
+  const r = random({
+    streamSize: size,
+    randomGenerator: (function* () {
+      yield 0;
+    })(),
+  });
+  let min = Number.MAX_SAFE_INTEGER;
+  let max = Number.MIN_SAFE_INTEGER;
+  let count = 0;
+  for (const num of r) {
+    count++;
+    min = Math.min(min, num);
+    max = Math.max(max, num);
   }
   assertEquals(count, size);
   // console.log([min.toString(16), max.toString(16)]);

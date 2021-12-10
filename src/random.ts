@@ -1,17 +1,4 @@
-const errorMsg = {
-  e001: (varname: string) => {
-    return `${varname} は Integerである必要があります`;
-  },
-  e002: (varname: string) => {
-    return `${varname} は 負数に対する処理方法が定義されていません`;
-  },
-  e003: () => {
-    return `取りうる範囲が上限を超えました`;
-  },
-  e004: (varname: string) => {
-    return `${varname} は 32bitの範囲である必要があります`;
-  },
-};
+import { errorMsg } from "./i18n/ja/message.ts";
 
 function* xorshift(seed: number) {
   // https://ja.wikipedia.org/wiki/Xorshift
@@ -57,11 +44,13 @@ function range(streamSize?: number) {
 }
 
 export function random(
-  { seed = 123456789, min, max, streamSize }: {
+  { seed = 123456789, min, max, streamSize, randomGenerator, scalingFunction }: {
     seed?: number;
     min?: number;
     max?: number;
     streamSize?: number;
+    randomGenerator?: Generator<number, void, unknown>;
+    scalingFunction?: (num: number) => number;
   },
 ) {
   if (typeof seed == "number" && !Number.isSafeInteger(seed)) {
@@ -94,12 +83,12 @@ export function random(
 
   const rangeiterator = range(streamSize);
 
-  const scaling = (() => {
+  const scaling = scalingFunction ?? (() => {
     if (typeof min == "number" && typeof max != "number") {
-      max = min < 0 ? 0xffffffff + min : 0xffffffff;
+      max = (min < 0) ? (0xffffffff + min) : 0xffffffff;
     }
     if (typeof min != "number" && typeof max == "number") {
-      if (Number(max ?? 0) < 0) {
+      if (Number(max) < 0) {
         throw new RangeError(errorMsg.e002("max"));
       }
       min = 0;
@@ -128,7 +117,7 @@ export function random(
     };
   })();
 
-  const randomiterator = xorshift(seed);
+  const randomiterator: Generator<number, void, unknown> = randomGenerator ?? xorshift(seed);
 
   function* _random() {
     for (const _n of rangeiterator) {
